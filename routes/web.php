@@ -23,16 +23,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     })->name('admin.dashboard');
 });
 
-Route::middleware(['auth', 'role:seller'])->group(function () {
+Route::middleware(['auth', 'seller'])->group(function () {
     Route::get('/seller/dashboard', function () {
-        return "Halaman Dashboard Seller";
-    })->name('seller.dashboard');
+        return "Dashboard Seller";
+    });
 });
 
 Route::middleware(['auth', 'role:member'])->group(function () {
-    Route::get('/customer/home', function () {
-        return "Halaman Customer";
-    })->name('customer.home');
+    Route::get('/member/home', function () {
+        return "Halaman Member / Customer";
+    })->name('member.home');
 });
 
 

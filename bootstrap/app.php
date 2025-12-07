@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // ⭐ INI MIDDLEWARE ROLE KAMU
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'seller' => \App\Http\Middleware\CheckSeller::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

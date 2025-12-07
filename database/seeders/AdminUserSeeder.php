@@ -30,7 +30,7 @@ class AdminUserSeeder extends Seeder
             'name' => 'Seller User',
             'email' => 'seller@example.com',
             'password' => bcrypt('password123'),
-            'role' => 'seller',
+            'role' => 'member',
         ]);
 
         // 3. Buat dua user member
