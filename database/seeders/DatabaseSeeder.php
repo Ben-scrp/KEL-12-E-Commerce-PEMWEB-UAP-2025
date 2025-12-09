@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+<<<<<<< HEAD
         $this->call([
             UserSeeder::class,
             StoreSeeder::class,
@@ -25,5 +26,20 @@ class DatabaseSeeder extends Seeder
         'role' => 'member'
         ]);
 
+=======
+        // User::factory(10)->create();
+         // Panggil semua seeder di sini
+        $this->call([
+            AdminUserSeeder::class,
+        ]);
+        
+        //template
+        // User::factory()->create([
+        //     'name' => 'admin',
+        //     'email' => 'admin@example.com',
+        // ]);
+
+        
+>>>>>>> 0270f70430a5f82f38c0eaa8414c61b86e23f218
     }
 }

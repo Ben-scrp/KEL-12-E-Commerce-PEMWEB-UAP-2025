@@ -15,8 +15,37 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // 1. Set user ID 1 sebagai admin
-        User::where('id', 1)->update([
-            'role' => 'admin'
+        // User::where('id', 1)->update([
+        //     'role' => 'admin'
+        // ]);
+        // 1. Buat user ID 1 (admin)
+        $admin = User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'admin',
+        ]);
+         // 2. Buat user seller
+        User::factory()->create([
+            'name' => 'Seller User',
+            'email' => 'seller@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'member',
+        ]);
+
+        // 3. Buat dua user member
+        User::factory()->create([
+            'name' => 'Member Satu',
+            'email' => 'member1@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'member',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Member Dua',
+            'email' => 'member2@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'member',
         ]);
 
         // 2. (OPSIONAL) Buat admin baru jika mau
