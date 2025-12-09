@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\VaPaymentController;
+use App\Http\Controllers\WalletController;
+
 
 // =========================
 // PUBLIC PAGE
@@ -26,11 +28,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware('verified')->name('dashboard');
+    //======================
+   //      WALLET ROUTES
+    // =======================
 
-    // CHECKOUT & VA PAYMENT
+    // Halaman utama wallet
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+
+    // Form topup
+    Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
+
+    // Proses topup
+    Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
+
+    // Proses pembayaran dengan wallet
+    Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
+
+
+    // =======================
+    //      VA PAYMENT
+    // =======================
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
     Route::post('/va/confirm/{vaNumber}', [VaPaymentController::class, 'confirmPayment']);
-
 });
 
 // =========================
@@ -73,6 +92,7 @@ Route::middleware(['auth', 'role:member'])->group(function () {
     })->name('customer.history');
 
 });
+
 
 // =========================
 // AUTH ROUTES (LOGIN, REGISTER)

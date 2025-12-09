@@ -9,15 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::create('user_balances', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->bigInteger('balance')->default(0);
-        $table->timestamps();
-    });
-}
+        public function up()
+    {
+        Schema::create('user_balances', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('balance', 12, 2)->default(0);
+            $table->timestamps();
+        });
+    }
 
 
     /**

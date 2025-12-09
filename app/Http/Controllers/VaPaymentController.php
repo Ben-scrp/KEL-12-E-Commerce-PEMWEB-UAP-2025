@@ -7,22 +7,18 @@ use Illuminate\Http\Request;
 
 class VaPaymentController extends Controller
 {
-    public function confirmPayment($vaNumber)
+    public function createVA(Request $request)
     {
-        $va = VirtualAccount::where('va_number', $vaNumber)->firstOrFail();
-
-        $va->update([
-            'is_paid' => true
-        ]);
-
-        // ubah status transaksi
-        $va->transaction->update([
-            'status' => 'paid'
-        ]);
+        $va = "VA" . rand(10000000, 99999999);
 
         return response()->json([
-            'message' => 'Pembayaran VA berhasil diverifikasi.',
-            'transaction_id' => $va->transaction_id
+            "transaction_id" => 1, // misal dummy dulu
+            "va_number" => $va
         ]);
+    }
+
+    public function confirmPayment($vaNumber)
+    {
+        return "Pembayaran VA $vaNumber dikonfirmasi!";
     }
 }
