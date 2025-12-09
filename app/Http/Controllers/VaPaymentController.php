@@ -2,23 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VirtualAccount;
 use Illuminate\Http\Request;
+use App\Models\VirtualAccount;
+
 
 class VaPaymentController extends Controller
 {
-    public function createVA(Request $request)
-    {
-        $va = "VA" . rand(10000000, 99999999);
 
-        return response()->json([
-            "transaction_id" => 1, // misal dummy dulu
-            "va_number" => $va
-        ]);
+        public function confirmPayment($vaNumber)
+    {
+        $va = VirtualAccount::where('va_number', $vaNumber)->first();
+
+        if (!$va) {
+            return back()->with('error', 'VA tidak ditemukan.');
+        }
+
+        // update status VA
+        $va->is_paid = true;
+        $va->save();
+
+        // update transaksi
+        $va->transaction->status = 'paid';
+        $va->transaction->save();
+
+        return back()->with('success', "Pembayaran VA $vaNumber berhasil dikonfirmasi!");
     }
 
-    public function confirmPayment($vaNumber)
-    {
-        return "Pembayaran VA $vaNumber dikonfirmasi!";
-    }
+
 }
+
