@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 // =========================
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
+        return view('dashboard');
     });
 });
 
