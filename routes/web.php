@@ -58,6 +58,23 @@ Route::middleware(['auth', 'role:member'])->group(function () {
 });
 
 // =========================
+// CUSTOMER PAGE (ROLE: member)
+// =========================
+Route::middleware(['auth', 'role:member'])->group(function () {
+
+    // Halaman pembelian
+    Route::get('/customer/purchase', function () {
+        return view('customer.purchase');
+    })->name('customer.purchase');
+
+    // Halaman riwayat pembelian
+    Route::get('/customer/history', function () {
+        return view('customer.history');
+    })->name('customer.history');
+
+});
+
+// =========================
 // AUTH ROUTES (LOGIN, REGISTER)
 // =========================
 require __DIR__.'/auth.php';
