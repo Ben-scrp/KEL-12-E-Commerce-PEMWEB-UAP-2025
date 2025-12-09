@@ -53,7 +53,7 @@ Route::middleware(['auth', 'role:member'])->group(function () {
             abort(403, 'ANDA BELUM MEMBUAT TOKO.');
         }
 
-        return view('seller.dashboard');
+        return view('dashboard');
     });
 });
 
