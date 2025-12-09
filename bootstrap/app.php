@@ -26,9 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-            // ⭐ INI MIDDLEWARE ROLE KAMU
+            // INI MIDDLEWARE ROLE 
             'role' => \App\Http\Middleware\RoleMiddleware::class,
-            'seller' => \App\Http\Middleware\CheckSeller::class,
+        
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
