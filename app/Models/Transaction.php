@@ -46,4 +46,9 @@ class Transaction extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
+    public function virtualAccount()
+    {
+    return $this->hasOne(VirtualAccount::class);
+    }
+
 }
