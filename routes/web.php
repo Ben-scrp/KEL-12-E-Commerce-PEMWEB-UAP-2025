@@ -2,40 +2,29 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Customer\HomeController;
-use App\Http\Controllers\Customer\ProductController;
-use App\Http\Controllers\Customer\CheckoutController;
-use App\Http\Controllers\Customer\TransactionController;
-use App\Http\Controllers\Customer\WalletController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\VaPaymentController;
+use App\Http\Controllers\WalletController;
+
 
 // =========================
-// PUBLIC PAGE (HOMEPAGE & PRODUCT)
+// PUBLIC PAGE
 // =========================
-Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // =========================
-// AUTHENTICATED CUSTOMER ROUTES
+// AUTHENTICATED USER
 // =========================
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    // CHECKOUT
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-
-    // HISTORY
-    Route::get('/history', [TransactionController::class, 'index'])->name('customer.history');
-
-    // WALLET TOPUP
-    Route::get('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
-    Route::post('/wallet/topup', [WalletController::class, 'storeTopup'])->name('wallet.storeTopup');
+Route::middleware('auth')->group(function () {
 
     // PROFILE
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // DASHBOARD (Optional/Legacy)
+
+    // CUSTOMER DASHBOARD
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware('verified')->name('dashboard');
@@ -68,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // =========================
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     });
 });
 
@@ -83,7 +72,7 @@ Route::middleware(['auth', 'role:member'])->group(function () {
             abort(403, 'ANDA BELUM MEMBUAT TOKO.');
         }
 
-        return view('dashboard');
+        return view('seller.dashboard');
     });
 });
 
