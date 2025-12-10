@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
 // =========================
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     });
 });
 
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:member'])->group(function () {
             abort(403, 'ANDA BELUM MEMBUAT TOKO.');
         }
 
-        return view('dashboard');
+        return view('seller.dashboard');
     });
 });
 
