@@ -33,6 +33,19 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+     // Halaman checkout (form lengkap)
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout.index');
+
+    // Proses checkout (buat transaksi + detail)
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])
+        ->name('checkout.process');
+        
+    // Checkout page
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->name('checkout.index');
+
+    
     /*
     |--------------------------------------------------------------------------
     | WALLET
@@ -49,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
+    
     Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
     Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
     Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');

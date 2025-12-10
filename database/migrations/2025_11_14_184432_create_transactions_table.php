@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('buyer_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('store_id')->constrained('stores')->cascadeOnDelete();
             $table->text('address');
-            $table->string('address_id');
+            $table->integer('address_id')->nullable();
             $table->string('city');
             $table->string('postal_code');
             $table->string('shipping');

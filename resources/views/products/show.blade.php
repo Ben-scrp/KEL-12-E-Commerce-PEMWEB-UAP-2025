@@ -31,9 +31,11 @@
         </p>
 
         {{-- Tombol beli --}}
-        <a href="/checkout?product={{ $product->id }}" 
-           class="block mt-6 bg-green-600 text-white px-4 py-3 rounded text-center hover:bg-green-700">
-           Beli Sekarang
+        <a href="{{ route('checkout', ['product' => $product->slug]) }}" 
+        class="w-full text-center bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 block">
+            Beli Sekarang
+        </a>
+
         </a>
         {{-- REVIEWS --}}
         <h2 class="text-2xl font-bold mb-4 mt-8">Review Produk</h2>
