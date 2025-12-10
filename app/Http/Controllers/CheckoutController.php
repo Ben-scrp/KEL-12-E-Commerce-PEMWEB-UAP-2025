@@ -10,48 +10,52 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-        public function payWithVA(Request $request)
+    public function payWithVA(Request $request)
     {
-        dd('MASUK CONTROLLER', $request->all());
-      
-
-        $transaction = Transaction::create([
-            
-            // 'id' => 1,
-            'buyer_id' => auth()->id(),        // WAJIB
-            'store_id' => 1,  // kalau wajib, isi ini
-            'grand_total' => $request->total_price, // karena tabel kamu pakai grand_total
-            'payment_status' => 'unpaid',
-            'code' => Str::upper(Str::random(10)),
-            'address' => 'alamat belum diisi',
-            'address_id' => ' ',
-            'city' => 'unknown',
-            'postal_code' => '00000',
-            'shipping' => '',
-            'shipping_type' => '',
-            'shipping_cost' => 0,
-            'tracking_number' => '',
-            'tax' => 0,
-            // 'created_at' => ' ',
-            // 'updated_at' => ' ',
+        // Validasi input
+        $request->validate([
+            'total_price' => 'required|numeric'
         ]);
-         $transaction = Transaction::create($data);
-        dd($transaction);
 
+        // 1. Buat Transaksi (Unpaid)
+        $transaction = Transaction::create([
+            'buyer_id'        => auth()->id(),
+            'store_id'        => null,   // ← WAJIB NULL karena checkout bisa dilakukan semua member
+            'address'         => 'alamat belum diisi',
+            'address_id'      => 0,
+            'city'            => 'unknown',
+            'postal_code'     => '00000',
 
+            // INFORMASI SHIPPING
+            'shipping'        => 'courier',
+            'shipping_type'   => 'regular',
+            'shipping_cost'   => 0,
+
+            // NOMOR TRACKING
+            'tracking_number' => '',
+
+            // INFORMASI TRANSAKSI
+            'grand_total'     => $request->total_price,
+            'tax'             => 0,
+            'payment_status'  => 'unpaid',
+
+            // KODE UNIK TRANSAKSI
+            'code'            => Str::upper(Str::random(10)),
+        ]);
+
+        // 2. Generate VA Number
         $vaNumber = VaGenerator::generate();
-        
 
+        // 3. Simpan ke tabel VirtualAccount
         VirtualAccount::create([
             'transaction_id' => $transaction->id,
             'va_number' => $vaNumber,
             'is_paid' => false
         ]);
 
-        return view('va.show', [
-            'va_number' => $vaNumber,
-            'total' => $request->total_price
-        ]);
+        // 4. Redirect ke halaman Payment dengan membawa VA Number
+        return redirect()->route('payment.index', ['va' => $vaNumber])
+            ->with('success', 'Silakan lakukan pembayaran ke Virtual Account berikut.');
     }
 
 }

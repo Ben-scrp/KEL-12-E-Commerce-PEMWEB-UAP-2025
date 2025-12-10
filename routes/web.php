@@ -18,6 +18,10 @@ Route::get('/', function () {
 // AUTHENTICATED USER
 // =========================
 Route::middleware('auth')->group(function () {
+    //paymet sukses
+    Route::get('/payment/success', function () {
+    return view('payment.success');
+    })->name('payment.success');
 
     // PROFILE
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -46,10 +50,14 @@ Route::middleware('auth')->group(function () {
 
 
     // =======================
-    //      VA PAYMENT
+    //      VA PAYMENT & PAGE
     // =======================
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
-    Route::post('/va/confirm/{vaNumber}', [VaPaymentController::class, 'confirmPayment']);
+    
+    // Dedicated Payment Page
+    Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
+    Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
+    Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');
 });
 
 // =========================
