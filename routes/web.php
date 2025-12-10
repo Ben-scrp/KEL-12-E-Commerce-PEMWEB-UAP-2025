@@ -5,22 +5,27 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\VaPaymentController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\ProductController;
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC PAGE
+|--------------------------------------------------------------------------
+*/
 
-// =========================
-// PUBLIC PAGE
-// =========================
-Route::get('/', function () {
-    return view('welcome');
-});
+// Homepage untuk semua user (guest & login)
+Route::get('/', [ProductController::class, 'index'])->name('homepage');
 
-// =========================
-// AUTHENTICATED USER
-// =========================
-Route::middleware('auth')->group(function () {
-    //paymet sukses
+/*
+|--------------------------------------------------------------------------
+| AUTHENTICATED USER
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+
+    // Payment success
     Route::get('/payment/success', function () {
-    return view('payment.success');
+        return view('payment.success');
     })->name('payment.success');
 
     // PROFILE
@@ -28,81 +33,73 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // CUSTOMER DASHBOARD
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
-    //======================
-   //      WALLET ROUTES
-    // =======================
-
-    // Halaman utama wallet
+    /*
+    |--------------------------------------------------------------------------
+    | WALLET
+    |--------------------------------------------------------------------------
+    */
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
-
-    // Form topup
     Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
-
-    // Proses topup
     Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
-
-    // Proses pembayaran dengan wallet
     Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
 
-
-    // =======================
-    //      VA PAYMENT & PAGE
-    // =======================
+    /*
+    |--------------------------------------------------------------------------
+    | VA PAYMENT & PAGE
+    |--------------------------------------------------------------------------
+    */
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
-    
-    // Dedicated Payment Page
     Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
     Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
     Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');
 });
 
-// =========================
-// ADMIN PAGE (ROLE: admin)
-// =========================
+/*
+|--------------------------------------------------------------------------
+| ADMIN PAGE
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
-    });
+    })->name('admin.dashboard');
 });
 
-// =========================
-// SELLER PAGE (ROLE: member + punya store)
-// =========================
+/*
+|--------------------------------------------------------------------------
+| SELLER PAGE
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:member'])->group(function () {
     Route::get('/seller/dashboard', function () {
 
-        // WAJIB PUNYA STORE
         if (!auth()->user()->store) {
-            abort(403, 'ANDA BELUM MEMBUAT TOKO.');
+            abort(403, 'Anda belum membuat toko.');
         }
 
         return view('seller.dashboard');
-    });
+    })->name('seller.dashboard');
 });
 
-// =========================
-// CUSTOMER PAGE (ROLE: member)
-// =========================
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER PAGE (member)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:member'])->group(function () {
 
-    // Halaman pembelian
     Route::get('/customer/purchase', function () {
         return view('customer.purchase');
     })->name('customer.purchase');
 
-    // Halaman riwayat pembelian
     Route::get('/customer/history', function () {
         return view('customer.history');
     })->name('customer.history');
-
 });
 
-
-// =========================
-// AUTH ROUTES (LOGIN, REGISTER)
-// =========================
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';
