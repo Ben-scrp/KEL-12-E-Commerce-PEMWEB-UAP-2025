@@ -6,10 +6,12 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function show($slug)
     {
-        $products = Product::with(['store', 'productCategory', 'productImages'])->get();
+        $product = Product::with(['productImages', 'productCategory', 'store', 'productReviews.user'])
+                        ->where('slug', $slug)
+                        ->firstOrFail();
 
-        return view('products.index', compact('products'));
+        return view('products.show', compact('product'));
     }
 }

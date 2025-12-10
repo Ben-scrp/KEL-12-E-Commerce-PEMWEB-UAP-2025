@@ -87,10 +87,11 @@
             @endif
 
             {{-- Tombol Lihat Produk --}}
-            <a href="/product/{{ $product->slug }}" 
-               class="mt-3 inline-block w-full text-center py-2 rounded bg-green-600 text-white hover:bg-green-700">
+            <a href="{{ route('product.show', $product->slug) }}" 
+            class="mt-3 inline-block w-full text-center py-2 rounded bg-green-600 text-white hover:bg-green-700">
                 Lihat Produk
             </a>
+
 
         </div>
 

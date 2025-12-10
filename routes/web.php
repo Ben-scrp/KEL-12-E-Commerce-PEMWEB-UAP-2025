@@ -97,6 +97,12 @@ Route::middleware(['auth', 'role:member'])->group(function () {
     })->name('customer.history');
 });
 
+// =========================
+// PRODUCT DETAIL PAGE
+// =========================
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+
+
 /*
 |--------------------------------------------------------------------------
 | AUTH ROUTES
