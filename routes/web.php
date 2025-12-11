@@ -47,8 +47,15 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
-    Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
-    Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
+    Route::get('/wallet/topup/va', [WalletController::class, 'showTopupVA'])
+    ->name('wallet.topup.va');
+
+    Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])
+    ->name('wallet.topup.form');
+    Route::post('/wallet/topup', [WalletController::class, 'topup'])
+        ->name('wallet.topup');
+        
+
     Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
 
     /*
@@ -128,9 +135,17 @@ Route::middleware(['auth', 'role:member'])->group(function () {
         return view('customer.purchase');
     })->name('customer.purchase');
 
-    Route::get('/customer/history', function () {
-        return view('customer.history');
-    })->name('customer.history');
+    // Riwayat Transaksi Customer
+    Route::get('/history', [\App\Http\Controllers\CustomerController::class, 'history'])
+        ->name('customer.history');
+
+    // Form Topup Saldo
+    Route::get('/wallet/topup', [\App\Http\Controllers\WalletController::class, 'showTopupForm'])
+        ->name('wallet.topup.form');
+
+    // Proses Topup Saldo → buat VA
+    Route::post('/wallet/topup', [\App\Http\Controllers\WalletController::class, 'topup'])
+        ->name('wallet.topup');
 });
 
 // =========================

@@ -55,6 +55,17 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                        <!-- Riwayat Transaksi -->
+                        <x-dropdown-link :href="route('customer.history')">
+                            {{ __('Riwayat Transaksi') }}
+                        </x-dropdown-link>
+
+                        <!-- Topup Saldo -->
+                        <x-dropdown-link :href="route('wallet.topup.form')">
+                            {{ __('Topup Saldo') }}
+                        </x-dropdown-link>
+
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

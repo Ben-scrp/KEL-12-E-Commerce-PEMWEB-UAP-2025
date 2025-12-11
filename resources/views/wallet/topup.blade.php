@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Topup Wallet</title>
-</head>
-<body>
-    <h1>Topup Saldo</h1>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-xl font-bold">Topup Saldo</h2>
+    </x-slot>
 
-    <form action="/wallet/topup" method="POST">
-        @csrf
-        <label>Jumlah Topup:</label>
-        <input type="number" name="amount" required>
-        <button type="submit">Topup</button>
-    </form>
+    <div class="p-6">
+        <form action="{{ route('wallet.topup') }}" method="POST">
+            @csrf
 
-    <hr>
-    <h3>Test Bayar Dengan Wallet</h3>
+            <label class="block mb-2">Nominal Topup</label>
+            <input type="number" name="amount" class="border p-2 rounded w-full" required>
 
-    <form action="/wallet/pay" method="POST">
-        @csrf
-        <input type="number" name="total" placeholder="Total pembayaran" required>
-        <button type="submit">Bayar Dengan Wallet</button>
-    </form>
+            <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
+                Generate VA Untuk Topup
+            </button>
+        </form>
+    </div>
 
-
-</body>
-</html>
+</x-app-layout>
