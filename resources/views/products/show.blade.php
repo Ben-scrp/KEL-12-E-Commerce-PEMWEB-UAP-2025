@@ -31,10 +31,14 @@
         </p>
 
         {{-- Tombol beli --}}
-        <a href="{{ route('checkout', ['product' => $product->slug]) }}" 
-        class="w-full text-center bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 block">
+        <a 
+            href="{{ route('checkout.index', ['product_id' => $product->id]) }}"
+            class="w-full text-center bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 block"
+        >
             Beli Sekarang
         </a>
+
+
 
         </a>
         {{-- REVIEWS --}}

@@ -11,74 +11,78 @@ use App\Models\Product;
 
 class CheckoutController extends Controller
 {
-    public function index(Request $request)
+        public function index(Request $request)
     {
-        $slug = $request->product;
+        // ambil product_id dari URL
+        $productId = $request->product_id;
 
-        // Ambil produk beserta relasi
-        $product = \App\Models\Product::with(['store', 'productImages'])
-            ->where('slug', $slug)
-            ->firstOrFail();
+        // Ambil data produk
+        $product = Product::with(['store', 'productImages'])
+                    ->where('id', $productId)
+                    ->firstOrFail();
 
         return view('checkout.index', compact('product'));
     }
 
-    public function process(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'address' => 'required',
-        'city' => 'required',
-        'postal_code' => 'required',
-        'shipping_type' => 'required',
-        'payment_method' => 'required',
-        'product_id' => 'required',
-        'price' => 'required|numeric'
-    ]);
 
-    // 1. Buat transaksi
-   $transaction = Transaction::create([
-        'buyer_id'       => auth()->id(),
-        'store_id'       => null,
-        'address_id'     => 0, // FIX WAJIB ADA
-        'address'        => $request->address,
-        'city'           => $request->city,
-        'postal_code'    => $request->postal_code,
-        'shipping'       => 'courier',
-        'shipping_type'  => $request->shipping_type,
-        'shipping_cost'  => 10000,
-        'grand_total'    => $request->total_price,
-        'tax'            => 40000,
-        'payment_status' => 'unpaid',
-        'code'           => Str::upper(Str::random(10)),
-    ]);
-
-
-    // 2. Simpan transaction_details
-    \App\Models\TransactionDetail::create([
-        'transaction_id' => $transaction->id,
-        'product_id' => $request->product_id,
-        'qty' => 1,
-        'price' => $request->price
-    ]);
-
-    // 3. Jika pilih VA → generate VA
-    if ($request->payment_method == 'va') {
-
-        $va = \App\Helpers\VaGenerator::generate();
-
-        \App\Models\VirtualAccount::create([
-            'transaction_id' => $transaction->id,
-            'va_number' => $va,
-            'is_paid' => false,
+        public function process(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'address' => 'required',
+            'city' => 'required',
+            'postal_code' => 'required',
+            'shipping_type' => 'required',
+            'payment_method' => 'required',
+            'product_id' => 'required',
+            'price' => 'required|numeric'
         ]);
 
-        return redirect()->route('payment.index', ['va' => $va]);
-    }
+        // 1. Buat transaksi
+    $transaction = Transaction::create([
+            'buyer_id'       => auth()->id(),
+            'store_id'       => null,
+            'address_id'     => 0, // FIX WAJIB ADA
+            'address'        => $request->address,
+            'city'           => $request->city,
+            'postal_code'    => $request->postal_code,
+            'shipping'       => 'courier',
+            'shipping_type'  => $request->shipping_type,
+            'shipping_cost'  => 10000,
+            'grand_total'    => $request->total_price,
+            'tax'            => 40000,
+            'payment_status' => 'unpaid',
+            'code'           => Str::upper(Str::random(10)),
+        ]);
 
-    return redirect()->route('wallet.index')
-        ->with('success', 'Pembayaran menggunakan saldo');
-}
+         $subtotal = $request->price * 1;
+
+        // 2. Simpan transaction_details
+        \App\Models\TransactionDetail::create([
+            'transaction_id' => $transaction->id,
+            'product_id' => $request->product_id,
+            'qty' => 1,
+            'price' => $request->price,
+            'subtotal' => $subtotal,
+            ]);
+
+        // 3. Jika pilih VA → generate VA
+        if ($request->payment_method == 'va') {
+
+            $va = \App\Helpers\VaGenerator::generate();
+
+            \App\Models\VirtualAccount::create([
+                'transaction_id' => $transaction->id,
+                'va_number' => $va,
+                'is_paid' => false,
+            ]);
+
+            return redirect()->route('payment.index', ['va' => $va]);
+        }
+
+        return redirect()->route('wallet.index')
+            ->with('success', 'Pembayaran menggunakan saldo');
+    }
 
 
 

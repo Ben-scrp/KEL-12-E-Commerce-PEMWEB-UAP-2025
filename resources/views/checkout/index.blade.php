@@ -41,6 +41,7 @@
 
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="price" value="{{ $product->price }}">
+                    <input type="hidden" name="total_price" value="{{ $product->price + 10000 }}"> 
 
                     {{-- ALAMAT --}}
                     <h3 class="text-lg font-bold mt-4">Alamat Pengiriman</h3>

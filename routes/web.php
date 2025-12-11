@@ -12,9 +12,10 @@ use App\Http\Controllers\ProductController;
 | PUBLIC PAGE
 |--------------------------------------------------------------------------
 */
-
-// Homepage untuk semua user (guest & login)
 Route::get('/', [ProductController::class, 'index'])->name('homepage');
+// Checkout page (bisa diakses tanpa login)
+Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->name('checkout.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ Route::get('/', [ProductController::class, 'index'])->name('homepage');
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
+    
 
     // Payment success
     Route::get('/payment/success', function () {
@@ -33,18 +35,11 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-     // Halaman checkout (form lengkap)
-    Route::get('/checkout', [CheckoutController::class, 'index'])
-        ->name('checkout.index');
 
     // Proses checkout (buat transaksi + detail)
     Route::post('/checkout/process', [CheckoutController::class, 'process'])
         ->name('checkout.process');
         
-    // Checkout page
-    Route::get('/checkout', [CheckoutController::class, 'index'])
-    ->name('checkout.index');
-
     
     /*
     |--------------------------------------------------------------------------
@@ -61,12 +56,39 @@ Route::middleware(['auth'])->group(function () {
     | VA PAYMENT & PAGE
     |--------------------------------------------------------------------------
     */
+    
+
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
     
     Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
+    Route::get('/payment/check', function () {
+    return redirect('/payment');
+    });
     Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
     Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| AFTER LOGIN REDIRECT
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return redirect('/admin/dashboard');
+    }
+
+    if ($user->role === 'member' && $user->store) {
+        return redirect('/seller/dashboard');
+    }
+
+    return redirect('/'); // customer langsung ke homepage
+})->middleware(['auth'])->name('dashboard');
+
 
 /*
 |--------------------------------------------------------------------------
