@@ -51,7 +51,7 @@
 }
 
 /* ===================== */
-/* BANNER */
+/* BANNER (FINAL VERSION) */
 /* ===================== */
 
 .banner {
@@ -60,11 +60,13 @@
 }
 
 .banner-img {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    border-radius: 16px;
+    width: 100%;          /* melebar penuh */
+    height: auto;         /* tinggi mengikuti gambar, tidak dipaksa */
+    max-height: 180px;    /* kecilkan tinggi maksimal */
+    object-fit: contain;  /* TIDAK memotong gambar */
+    border-radius: 12px;
 }
+
 
 /* ===================== */
 /* CATEGORY */
