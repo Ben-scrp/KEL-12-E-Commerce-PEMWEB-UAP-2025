@@ -37,6 +37,21 @@
                             Pengaturan Toko
                         </a>
 
+
+                        <a href="{{ route('seller.categories.index') }}"
+                           class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                            Kelola Kategori
+                        </a>
+
+                        <a href="{{ route('seller.balance.index') }}"
+                           class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                            Saldo Toko
+                        </a>
+
+                        <a href="{{ route('seller.withdrawals.index') }}"
+                           class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                            Penarikan Dana
+                        </a>
                     </div>
 
                 </div>

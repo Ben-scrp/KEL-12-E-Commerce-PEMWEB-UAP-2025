@@ -6,6 +6,11 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\VaPaymentController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Seller\StoreController;
+use App\Http\Controllers\Seller\CategoryController;
+use App\Http\Controllers\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Seller\OrderController as SellerOrderController;
+use App\Http\Controllers\Seller\BalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,14 +119,31 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:member'])->group(function () {
+    Route::get('/store/register', [StoreController::class, 'create'])->name('store.register');
+    Route::post('/store/register', [StoreController::class, 'store'])->name('store.store');
+
     Route::get('/seller/dashboard', function () {
-
         if (!auth()->user()->store) {
-            abort(403, 'Anda belum membuat toko.');
+            return redirect()->route('store.register');
         }
-
         return view('seller.dashboard');
     })->name('seller.dashboard');
+
+    Route::get('/seller/profile', [StoreController::class, 'edit'])->name('seller.profile');
+    Route::put('/seller/profile', [StoreController::class, 'update'])->name('seller.profile.update');
+
+
+    Route::resource('/seller/categories', CategoryController::class)->names('seller.categories');
+    Route::resource('/seller/products', SellerProductController::class)->names('seller.products');
+    Route::delete('/seller/products/images/{image}', [SellerProductController::class, 'deleteImage'])->name('seller.products.images.destroy');
+    Route::patch('/seller/products/images/{image}/thumbnail', [SellerProductController::class, 'setThumbnail'])->name('seller.products.images.thumbnail');
+
+    Route::resource('/seller/orders', SellerOrderController::class)->only(['index', 'show', 'update'])->names('seller.orders');
+
+    Route::get('/seller/balance', [BalanceController::class, 'index'])->name('seller.balance.index');
+    Route::get('/seller/withdrawals', [BalanceController::class, 'withdrawals'])->name('seller.withdrawals.index');
+    Route::get('/seller/withdrawals/create', [BalanceController::class, 'createWithdrawal'])->name('seller.withdrawals.create');
+    Route::post('/seller/withdrawals', [BalanceController::class, 'storeWithdrawal'])->name('seller.withdrawals.store');
 });
 
 /*
