@@ -71,12 +71,20 @@
     </div>
     <!-- ========== END SEARCH ========== -->
 
+    {{-- ========== JIKA KOSONG ========== --}}
+    @if($products->isEmpty())
+        <div class="text-center py-10">
+            <img src="https://cdn-icons-png.flaticon.com/512/7486/7486742.png" 
+                 class="mx-auto mb-4" width="120">
+            <h2 class="text-2xl font-semibold text-gray-600">Produk tidak ditemukan</h2>
+            <p class="text-gray-500 mt-1">Coba kata kunci lain ya!</p>
+        </div>
+    @else
 
+    {{-- ========== LIST PRODUK ========== --}}
     <div class="grid grid-cols-4 gap-6">
 
-        {{-- LOOP DATA PRODUK --}}
         @foreach($products as $product)
-
         <div class="product-card">
 
             {{-- Kategori --}}
@@ -115,11 +123,14 @@
             </a>
 
         </div>
-
         @endforeach
 
     </div>
 
+    @endif
+    {{-- ========== END EMPTY CHECK ========== --}}
+
 </div>
 
 </x-app-layout>
+
