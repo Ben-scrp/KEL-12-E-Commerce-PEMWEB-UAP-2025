@@ -1,25 +1,80 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Admin Dashboard
-        </h2>
-    </x-slot>
+    <style>
+        body {
+            background: #f5f9f6 !important;
+        }
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-3">Welcome, Admin!</h3>
-                <p class="mb-5">Kelola aplikasi dari halaman ini.</p>
+        .hero {
+            background: linear-gradient(135deg, #4CAF50, #6BCF8A);
+            padding: 40px;
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 32px;
+        }
 
-                <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('admin.verification') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                        Verifikasi Toko
-                    </a>
-                    <a href="{{ route('admin.users') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        Manajemen User & Store
-                    </a>
-                </div>
-            </div>
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 26px rgba(0,0,0,0.12);
+        }
+
+        .btn-primary {
+            background: #1d4ed8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+    </style>
+
+    <div class="max-w-5xl mx-auto px-6 py-8">
+
+        <!-- HERO SECTION -->
+        <div class="hero">
+            <h1 class="text-3xl font-bold">Selamat Datang, Admin! 👋</h1>
+            <p class="mt-2 text-lg opacity-90">
+                Kelola seluruh sistem Kidzy Store dari halaman ini.
+            </p>
         </div>
+
+        <!-- CARD MENU -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Verifikasi Toko -->
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-3">Verifikasi Toko</h2>
+                <p class="mb-4 text-gray-600">
+                    Lihat dan kelola toko yang menunggu persetujuan.
+                </p>
+                <a href="/admin/store-verification" class="btn-primary">Masuk</a>
+            </div>
+
+            <!-- Manajemen User -->
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-3">Manajemen User & Store</h2>
+                <p class="mb-4 text-gray-600">
+                    Kelola data user, seller, dan seluruh aktivitasnya.
+                </p>
+                <a href="/admin/users" class="btn-success">Kelola</a>
+            </div>
+
+        </div>
+
     </div>
+
 </x-app-layout>
