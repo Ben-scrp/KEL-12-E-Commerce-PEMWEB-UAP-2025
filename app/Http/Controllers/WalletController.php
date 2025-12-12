@@ -77,6 +77,8 @@ class WalletController extends Controller
         $balance->balance -= $request->total;
         $balance->save();
 
+        
+
         return back()->with('success', 'Pembayaran berhasil! Sisa saldo: ' . $balance->balance);
     }
 
