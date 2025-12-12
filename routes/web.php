@@ -54,13 +54,14 @@ Route::middleware(['auth'])->group(function () {
     | WALLET
     |--------------------------------------------------------------------------
     */
-    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    
     Route::get('/wallet/topup/va', [WalletController::class, 'showTopupVA'])->name('wallet.topup.va');
 
     Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
     Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
 
     Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
 
 
     /*

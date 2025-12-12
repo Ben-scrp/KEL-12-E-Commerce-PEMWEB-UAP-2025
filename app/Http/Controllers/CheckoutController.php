@@ -81,8 +81,12 @@ class CheckoutController extends Controller
             return redirect()->route('payment.index', ['va' => $va]);
         }
 
-        return redirect()->route('wallet.index')
-            ->with('success', 'Pembayaran menggunakan saldo');
+        return redirect()->route('wallet.index', [
+            'transaction_id' => $transaction->id,
+            'total' => $transaction->grand_total
+        ]);
+
+
     }
 
 

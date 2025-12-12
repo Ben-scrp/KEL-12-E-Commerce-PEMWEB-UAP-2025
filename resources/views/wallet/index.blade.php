@@ -130,16 +130,23 @@
 
     <hr>
 
-    {{-- FORM PEMBAYARAN --}}
-    <div>
-        <div class="subtitle">Bayar Dengan Wallet</div>
+    {{-- BAGIAN BAYAR CHECKOUT --}}
+    @if(isset($transaction_id) && isset($total))
+        <div class="alert alert-success">
+            Pembayaran Checkout<br>
+            Total Tagihan: <b>Rp {{ number_format($total, 0, ',', '.') }}</b>
+        </div>
 
         <form action="/wallet/pay" method="POST">
             @csrf
-            <input type="number" name="total" placeholder="Total pembayaran" required>
+            <input type="hidden" name="transaction_id" value="{{ $transaction_id }}">
+            <input type="hidden" name="amount" value="{{ $total }}">
             <button class="danger" type="submit">Bayar Sekarang</button>
         </form>
-    </div>
+
+        <hr>
+    @endif
+
 
 </div>
 

@@ -11,12 +11,17 @@ use App\Helpers\VaGenerator;    // <-- biar lebih rapih
 class WalletController extends Controller
 {
     // HALAMAN UTAMA WALLET
-    public function index()
+    public function index(Request $request)
     {
         $balance = UserBalance::where('user_id', auth()->id())->first();
 
-        return view('wallet.index', compact('balance'));
+        return view('wallet.index', [
+            'balance'        => $balance,
+            'transaction_id' => $request->transaction_id,  // data dari checkout
+            'total'          => $request->total            // total tagihan
+        ]);
     }
+
 
     /**
      * TAMPILKAN FORM TOPUP WALLET
@@ -57,30 +62,52 @@ class WalletController extends Controller
      * PEMBAYARAN PAKAI WALLET
      */
     public function payWithWallet(Request $request)
-    {
-        $request->validate([
-            'total' => 'required|numeric|min:1'
-        ]);
+{
+    $request->validate([
+        'transaction_id' => 'required|numeric',
+        'amount' => 'required|numeric|min:1'
+    ]);
 
-        $balance = UserBalance::where('user_id', auth()->id())->first();
+    // Ambil transaksi yg mau dibayar
+    $transaction = \App\Models\Transaction::findOrFail($request->transaction_id);
 
-        if (!$balance) {
-            return back()->withErrors("Anda belum memiliki wallet. Silakan topup dulu.");
-        }
-
-        // cek saldo cukup
-        if ($balance->balance < $request->total) {
-            return back()->withErrors("Saldo tidak cukup.");
-        }
-
-        // potong saldo
-        $balance->balance -= $request->total;
-        $balance->save();
-
-        
-
-        return back()->with('success', 'Pembayaran berhasil! Sisa saldo: ' . $balance->balance);
+    // 1. Cek nominal harus sama
+    if ($request->amount != $transaction->grand_total) {
+        return back()->withErrors("Nominal pembayaran tidak sesuai total tagihan.");
     }
+
+    // 2. Ambil saldo user
+    $wallet = UserBalance::firstOrCreate(
+        ['user_id' => auth()->id()],
+        ['balance' => 0]
+    );
+
+    if ($wallet->balance < $transaction->grand_total) {
+        return back()->withErrors("Saldo tidak mencukupi.");
+    }
+
+    // 3. Kurangi saldo
+    $wallet->decrement('balance', $transaction->grand_total);
+
+    // 4. Update transaksi jadi paid
+    $transaction->update([
+        'payment_status' => 'paid'
+    ]);
+
+    // 5. Masukkan uang ke seller (jika ada store id)
+    if ($transaction->store_id) {
+        $storeBalance = \App\Models\StoreBalance::firstOrCreate(
+            ['store_id' => $transaction->store_id],
+            ['balance' => 0]
+        );
+
+        $storeBalance->increment('balance', $transaction->grand_total);
+    }
+
+    return redirect()->route('wallet.index')
+        ->with('success', 'Pembayaran berhasil dengan wallet!');
+}
+
 
     public function showTopupVA(Request $request)
     {
