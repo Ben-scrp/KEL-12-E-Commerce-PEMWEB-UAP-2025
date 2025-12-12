@@ -5,57 +5,76 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
 
-                    {{-- Info --}}
-                    <h3 class="text-lg font-semibold mb-3">Welcome, Seller!</h3>
-                    <p class="mb-5">Anda sekarang berada di halaman dashboard khusus seller.</p>
+            <div class="bg-white shadow sm:rounded-lg">
+                <div class="p-6">
 
-                    {{-- Tombol Navigasi --}}
-                    <div class="flex flex-wrap gap-4">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-1">Welcome, Seller!</h1>
 
+                    <p class="text-gray-600 mb-4">
+                        Kelola seluruh kebutuhan toko Anda melalui menu berikut:
+                    </p>
+
+                    <!-- MENU GRID -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                        <!-- Kembali ke Dashboard -->
                         <a href="/dashboard"
-                           class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+                           class="block p-5 rounded-xl shadow font-semibold text-center text-white"
+                           style="background:#374151 !important;">
                             Kembali ke Dashboard Utama
                         </a>
 
+                        <!-- Kelola Produk -->
                         <a href="/seller/products"
-                           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center text-white"
+                           style="background:#2563eb !important;">
                             Kelola Produk
                         </a>
 
+                        <!-- Lihat Pesanan -->
                         <a href="/seller/orders"
-                           class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center text-white"
+                           style="background:#16a34a !important;">
                             Lihat Pesanan Masuk
                         </a>
 
+                        <!-- Pengaturan Toko -->
                         <a href="/seller/profile"
-                           class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center text-white"
+                           style="background:#4f46e5 !important;">
                             Pengaturan Toko
                         </a>
 
-
+                        <!-- Kelola Kategori (FIX PUTIH) -->
                         <a href="{{ route('seller.categories.index') }}"
-                           class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center"
+                           style="background:#eab308 !important; color:#000 !important; border:1px solid #c59f08 !important;">
                             Kelola Kategori
                         </a>
 
+                        <!-- Saldo Toko (FIX PUTIH) -->
                         <a href="{{ route('seller.balance.index') }}"
-                           class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center"
+                           style="background:#fb923c !important; color:#000 !important; border:1px solid #dd7f2f !important;">
                             Saldo Toko
                         </a>
 
+                        <!-- Penarikan -->
                         <a href="{{ route('seller.withdrawals.index') }}"
-                           class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                           class="block p-5 rounded-xl shadow font-semibold text-center text-white"
+                           style="background:#dc2626 !important;">
                             Penarikan Dana
                         </a>
+
                     </div>
 
                 </div>
             </div>
+
         </div>
     </div>
 </x-app-layout>
+

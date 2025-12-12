@@ -19,15 +19,14 @@ use App\Http\Controllers\Seller\BalanceController;
 | PUBLIC PAGE
 |--------------------------------------------------------------------------
 */
-
-// Homepage (tetap)
 Route::get('/', [ProductController::class, 'index'])->name('homepage');
 
-// ➜ Tambahan route supaya search bar bekerja
+// 🔥 Tambahan penting BIAR SEARCH BAR & LIST PRODUK NGGAK ERROR
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-// Checkout page
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+// Checkout page (bisa diakses tanpa login)
+Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->name('checkout.index');
 
 
 /*
@@ -37,6 +36,7 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.in
 */
 Route::middleware(['auth'])->group(function () {
 
+    // Payment success
     Route::get('/payment/success', function () {
         return view('payment.success');
     })->name('payment.success');
@@ -46,17 +46,17 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Checkout Process
+    // Proses checkout (buat transaksi + detail)
     Route::post('/checkout/process', [CheckoutController::class, 'process'])
         ->name('checkout.process');
 
-    
     /*
     |--------------------------------------------------------------------------
     | WALLET
     |--------------------------------------------------------------------------
     */
-    
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+
     Route::get('/wallet/topup/va', [WalletController::class, 'showTopupVA'])->name('wallet.topup.va');
 
     Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
@@ -65,19 +65,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
 
-
     /*
     |--------------------------------------------------------------------------
-    | VA PAYMENT
+    | VA PAYMENT & PAGE
     |--------------------------------------------------------------------------
     */
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
-    
+
     Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
-    Route::match(['get','post'], '/payment/check', [VaPaymentController::class, 'check'])
-    ->name('payment.check');
 
+    Route::get('/payment/check', function () {
+        return redirect('/payment');
+    });
 
+    Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
     Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');
 });
 
@@ -102,25 +103,27 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN PAGE
-|--------------------------------------------------------------------------
-*/
+// --------------------------------------------------------------------------
+// ADMIN PAGE
+// --------------------------------------------------------------------------
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
 
-    
-    Route::get('/admin/verification', [AdminController::class, 'verification'])
-    ->name('admin.verification');
+    Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])
+        ->name('admin.dashboard');
 
-    Route::post('/admin/verification/{id}', [AdminController::class, 'verifyStore'])
-    ->name('admin.verify.store');
+    // Verifikasi Toko
+    Route::get('/admin/verification', [\App\Http\Controllers\AdminController::class, 'verification'])
+        ->name('admin.verification');
+
+    Route::post('/admin/verification/{store}/verify', [\App\Http\Controllers\AdminController::class, 'verifyStore'])
+        ->name('admin.verification.verify');
 
     Route::post('/admin/verification/{store}/reject', [\App\Http\Controllers\AdminController::class, 'rejectStore'])
-    ->name('admin.verification.reject');
+        ->name('admin.verification.reject');
 
-    Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('admin.users');
+    // Manajemen User & Toko
+    Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users'])
+        ->name('admin.users');
 });
 
 
@@ -145,7 +148,9 @@ Route::middleware(['auth', 'role:member'])->group(function () {
     Route::put('/seller/profile', [StoreController::class, 'update'])->name('seller.profile.update');
 
     Route::resource('/seller/categories', CategoryController::class)->names('seller.categories');
+
     Route::resource('/seller/products', SellerProductController::class)->names('seller.products');
+
     Route::delete('/seller/products/images/{image}', [SellerProductController::class, 'deleteImage'])->name('seller.products.images.destroy');
     Route::patch('/seller/products/images/{image}/thumbnail', [SellerProductController::class, 'setThumbnail'])->name('seller.products.images.thumbnail');
 
@@ -169,14 +174,12 @@ Route::middleware(['auth', 'role:member'])->group(function () {
         return view('customer.purchase');
     })->name('customer.purchase');
 
+    // Riwayat Transaksi Customer
     Route::get('/history', [\App\Http\Controllers\CustomerController::class, 'history'])
         ->name('customer.history');
 
-    Route::get('/wallet/topup', [\App\Http\Controllers\WalletController::class, 'showTopupForm'])
-        ->name('wallet.topup.form');
-
-    Route::post('/wallet/topup', [\App\Http\Controllers\WalletController::class, 'topup'])
-        ->name('wallet.topup');
+    Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
+    Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
 });
 
 
@@ -194,4 +197,3 @@ Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
-

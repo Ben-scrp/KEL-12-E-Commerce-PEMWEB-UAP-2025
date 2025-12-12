@@ -37,7 +37,7 @@
                                         <td class="py-2 px-4">{{ $store->user->name }}</td>
                                         <td class="py-2 px-4">{{ $store->city }}</td>
                                         <td class="py-2 px-4 flex gap-2">
-                                            <form action="{{ route('admin.verify.store', $store->id) }}" method="POST">
+                                            <form action="{{ route('admin.verification.verify', $store->id) }}" method="POST">
                                                 @csrf
                                                 <button type="submit">Verifikasi</button>
                                             </form>

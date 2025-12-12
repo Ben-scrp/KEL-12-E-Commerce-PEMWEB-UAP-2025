@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\UserBalance;
-use App\Models\VirtualAccount;  // <-- WAJIB ditambahkan
-use App\Helpers\VaGenerator;    // <-- biar lebih rapih
+
 
 class WalletController extends Controller
 {
@@ -21,8 +19,11 @@ class WalletController extends Controller
             'total'          => $request->total            // total tagihan
         ]);
     }
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 49dcd119cb94899d611f6a48e884d1955b0a8e22
     /**
      * TAMPILKAN FORM TOPUP WALLET
      */
@@ -35,28 +36,23 @@ class WalletController extends Controller
      * PROSES TOPUP SALDO
      */
     public function topup(Request $request)
-{
-    $request->validate([
-        'amount' => 'required|numeric|min:1000'
-    ]);
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1000'
+        ]);
 
-    // Generate VA unik topup
-    $va = \App\Helpers\VaGenerator::generate();
+        // Ambil saldo user (atau buat baru)
+        $balance = UserBalance::firstOrCreate(
+            ['user_id' => auth()->id()],
+            ['balance' => 0]
+        );
 
-     // SIMPAN NOMINAL TOPUP KE SESSION (WAJIB)
-    session(['topup_amount' => $request->amount]);
+        // Tambah saldo
+        $balance->balance += $request->amount;
+        $balance->save();
 
-    // Simpan VA ke database dengan tipe topup
-    VirtualAccount::create([
-        'transaction_id' => auth()->id(), 
-        'va_number'      => $va,
-        'is_paid'        => false,
-        'amount'         => $request->amount,   // WAJIB
-        'type'           => 'topup',            // Tambahkan kolom type
-    ]);
-
-    return redirect()->route('wallet.topup.va', ['va' => $va]);
-}
+        return back()->with('success', 'Topup berhasil! Saldo Anda saat ini: ' . $balance->balance);
+    }
 
     /**
      * PEMBAYARAN PAKAI WALLET
@@ -71,6 +67,23 @@ class WalletController extends Controller
     // Ambil transaksi yg mau dibayar
     $transaction = \App\Models\Transaction::findOrFail($request->transaction_id);
 
+<<<<<<< HEAD
+        if (!$balance) {
+            return back()->withErrors("Anda belum memiliki wallet. Silakan topup dulu.");
+        }
+
+        // cek saldo cukup
+        if ($balance->balance < $request->total) {
+            return back()->withErrors("Saldo tidak cukup.");
+        }
+
+        // potong saldo
+        $balance->balance -= $request->total;
+        $balance->save();
+
+        return back()->with('success', 'Pembayaran berhasil! Sisa saldo: ' . $balance->balance);
+    }
+=======
     // 1. Cek nominal harus sama
     if ($request->amount != $transaction->grand_total) {
         return back()->withErrors("Nominal pembayaran tidak sesuai total tagihan.");
@@ -156,4 +169,5 @@ class WalletController extends Controller
 }
 
 
+>>>>>>> 49dcd119cb94899d611f6a48e884d1955b0a8e22
 }
