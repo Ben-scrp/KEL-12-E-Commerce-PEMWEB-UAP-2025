@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\UserBalance;
-use App\Models\VirtualAccount;  // <-- WAJIB ditambahkan
-use App\Helpers\VaGenerator;    // <-- biar lebih rapih
+
 
 class WalletController extends Controller
 {
@@ -17,7 +15,6 @@ class WalletController extends Controller
 
         return view('wallet.index', compact('balance'));
     }
-
     /**
      * TAMPILKAN FORM TOPUP WALLET
      */
@@ -30,28 +27,23 @@ class WalletController extends Controller
      * PROSES TOPUP SALDO
      */
     public function topup(Request $request)
-{
-    $request->validate([
-        'amount' => 'required|numeric|min:1000'
-    ]);
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1000'
+        ]);
 
-    // Generate VA unik topup
-    $va = \App\Helpers\VaGenerator::generate();
+        // Ambil saldo user (atau buat baru)
+        $balance = UserBalance::firstOrCreate(
+            ['user_id' => auth()->id()],
+            ['balance' => 0]
+        );
 
-     // SIMPAN NOMINAL TOPUP KE SESSION (WAJIB)
-    session(['topup_amount' => $request->amount]);
+        // Tambah saldo
+        $balance->balance += $request->amount;
+        $balance->save();
 
-    // Simpan VA ke database dengan tipe topup
-    VirtualAccount::create([
-        'transaction_id' => auth()->id(), 
-        'va_number'      => $va,
-        'is_paid'        => false,
-        'amount'         => $request->amount,   // WAJIB
-        'type'           => 'topup',            // Tambahkan kolom type
-    ]);
-
-    return redirect()->route('wallet.topup.va', ['va' => $va]);
-}
+        return back()->with('success', 'Topup berhasil! Saldo Anda saat ini: ' . $balance->balance);
+    }
 
     /**
      * PEMBAYARAN PAKAI WALLET
@@ -77,56 +69,6 @@ class WalletController extends Controller
         $balance->balance -= $request->total;
         $balance->save();
 
-        
-
         return back()->with('success', 'Pembayaran berhasil! Sisa saldo: ' . $balance->balance);
     }
-
-    public function showTopupVA(Request $request)
-    {
-        $va_number = $request->va;
-
-        $topup_amount = session('topup_amount', 0); // default 0 kalau tidak ada
-
-        return view('wallet.topup_va', compact('va_number', 'topup_amount'));
-    }
-
-    public function payTopup(Request $request)
-{
-    $va = VirtualAccount::where('va_number', $request->va_number)
-                        ->whereNull('transaction_id') // topup
-                        ->first();
-
-    if (!$va) {
-        return back()->withErrors("VA tidak ditemukan.");
-    }
-
-    // ambil nominal topup dari session
-    $amount = session('topup_amount');
-
-    if (!$amount) {
-        return back()->withErrors("Nominal topup tidak ditemukan.");
-    }
-
-    // tandai VA sudah dibayar
-    $va->is_paid = true;
-    $va->save();
-
-    // proses saldo
-    $wallet = UserBalance::firstOrCreate(
-        ['user_id' => auth()->id()],
-        ['balance' => 0]
-    );
-
-    $wallet->balance += $amount;
-    $wallet->save();
-
-    // hapus session setelah sukses
-    session()->forget('topup_amount');
-
-    return redirect()->route('wallet.index')
-                     ->with('success', 'Topup berhasil! Saldo bertambah.');
-}
-
-
 }
