@@ -37,18 +37,16 @@
                                         <td class="py-2 px-4">{{ $store->user->name }}</td>
                                         <td class="py-2 px-4">{{ $store->city }}</td>
                                         <td class="py-2 px-4 flex gap-2">
-                                            <form action="{{ route('admin.verification.verify', $store) }}" method="POST">
+                                            <form action="{{ route('admin.verify.store', $store->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                                                    Verifikasi
-                                                </button>
+                                                <button type="submit">Verifikasi</button>
                                             </form>
-                                            <form action="{{ route('admin.verification.reject', $store) }}" method="POST">
+
+                                            <form action="{{ route('admin.verification.reject', $store->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="return confirm('Yakin ingin menolak toko ini?')">
-                                                    Tolak
-                                                </button>
+                                                <button type="submit" class="text-red-600">Tolak</button>
                                             </form>
+
                                         </td>
                                     </tr>
                                 @endforeach

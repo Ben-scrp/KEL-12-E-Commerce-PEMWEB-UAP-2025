@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\VaPaymentController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\AdminController;
+
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Seller\StoreController;
 use App\Http\Controllers\Seller\CategoryController;
@@ -108,9 +110,15 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/admin/verification', [\App\Http\Controllers\AdminController::class, 'verification'])->name('admin.verification');
-    Route::post('/admin/verification/{store}/verify', [\App\Http\Controllers\AdminController::class, 'verifyStore'])->name('admin.verification.verify');
-    Route::post('/admin/verification/{store}/reject', [\App\Http\Controllers\AdminController::class, 'rejectStore'])->name('admin.verification.reject');
+    
+    Route::get('/admin/verification', [AdminController::class, 'verification'])
+    ->name('admin.verification');
+
+    Route::post('/admin/verification/{id}', [AdminController::class, 'verifyStore'])
+    ->name('admin.verify.store');
+
+    Route::post('/admin/verification/{store}/reject', [\App\Http\Controllers\AdminController::class, 'rejectStore'])
+    ->name('admin.verification.reject');
 
     Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('admin.users');
 });

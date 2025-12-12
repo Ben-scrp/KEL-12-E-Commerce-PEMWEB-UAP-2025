@@ -15,16 +15,23 @@ class AdminController extends Controller
 
     public function verification()
     {
-        // Ambil semua toko yang belum diverifikasi
-        $stores = Store::where('is_verified', false)->with('user')->get();
+        $stores = Store::where('is_verified', false)
+                    ->with('user')
+                    ->get();
+
         return view('admin.verification', compact('stores'));
     }
 
-    public function verifyStore(Store $store)
+
+    public function verifyStore($id)
     {
-        $store->update(['is_verified' => true]);
-        return redirect()->back()->with('success', 'Toko berhasil diverifikasi.');
+        $store = Store::findOrFail($id);
+        $store->is_verified = true;
+        $store->save();
+
+        return back()->with('success', 'Toko berhasil diverifikasi!');
     }
+
 
     public function rejectStore(Store $store)
     {
