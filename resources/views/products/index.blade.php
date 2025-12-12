@@ -5,9 +5,6 @@
         background: #e9f5ec !important;
     }
 
-    /* ====================== */
-    /* PRODUCT CARD STYLE     */
-    /* ====================== */
     .product-card {
         background: white;
         border-radius: 12px;
@@ -49,50 +46,23 @@
         font-size: 14px;
         color: #777;
     }
-
-    /* ====================== */
-    /* FIX BANNER SIZE        */
-    /* ====================== */
-    img.banner-img {
-        width: 100% !important;
-        height: auto !important;
-        max-height: 150px !important;  /* <= UKURAN BANNER */
-        object-fit: contain !important;
-        border-radius: 12px !important;
-        background: white !important;
-        display: block !important;
-    }
 </style>
 
 <div class="container mx-auto px-8 py-10">
 
     <!-- =========================== -->
-    <!-- BANNER PROMO -->
+    <!-- WELCOME SECTION (GANTI BANNER) -->
+    <!-- Muncul hanya kalau tidak sedang search -->
     <!-- =========================== -->
-    <div class="w-full mb-6">
-        <div class="relative rounded-xl overflow-hidden shadow-lg">
-            
-            <!-- FIX: pakai class banner-img -->
-            <img src="{{ asset('banner/banner.jpg') }}" 
-                 class="banner-img">
-
-            <div class="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow text-lg font-bold">
-                Promo Spesial!
-            </div>
-        </div>
-    </div>
-
-    <!-- =========================== -->
-    <!-- WELCOME TEXT -->
-    <!-- =========================== -->
-    <div class="bg-green-100 border border-green-300 p-5 rounded-xl shadow text-center mb-10">
-        <h1 class="text-2xl font-bold text-green-800">
-            Temukan produk favoritmu di Kidzy Store!
-        </h1>
-        <p class="text-green-700 mt-1">
-            Belanja aman, nyaman, dan cepat hanya di sini ✨
+    @if(!request('search'))
+    <div class="bg-green-200 border border-green-400 p-6 rounded-xl shadow mb-10 text-center">
+        <h1 class="text-3xl font-bold text-green-800">Selamat Datang di Kidzy Store! 🎉</h1>
+        <p class="text-green-700 mt-2 text-lg">
+            Temukan berbagai produk terbaik dengan harga terjangkau. Yuk mulai belanja!
         </p>
     </div>
+    @endif
+
 
     <h1 class="text-3xl font-bold mb-6">Semua Produk</h1>
     
@@ -115,6 +85,7 @@
         </form>
     </div>
     <!-- ========== END SEARCH ========== -->
+
 
     {{-- ========== JIKA KOSONG ========== --}}
     @if($products->isEmpty())
@@ -178,4 +149,3 @@
 </div>
 
 </x-app-layout>
-
