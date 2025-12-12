@@ -1,1 +1,140 @@
+KEL-12 E-Commerce PEMWEB UAP 2025
+
+Anggota Kelompok : 
+BENING RAHMA AISYAH - 245150600111001
+IKRIMA MAISYA ANWAR - 245150600111014
+
+Deskripsi Aplikasi
+KidZ Store adalah aplikasi e-commerce berbasis Laravel yang dirancang khusus untuk menyediakan berbagai perlengkapan anak-anak dalam satu platform. Aplikasi ini menampilkan beragam kategori produk yang memudahkan pengguna dalam mencari kebutuhan anak,
+mulai dari kategori Aksesoris seperti tumbler anak, Fashion berupa pakaian anak, Kebutuhan seperti baby bed up, kategori Elektronik berupa e-book muslim anak, hingga kategori Makanan seperti biskuit bayi.  Setiap produk disajikan dengan tampilan yang rapi,
+lengkap dengan gambar, harga, dan detail produk, sehingga memudahkan pengguna dalam melakukan pemilihan barang. KidZ Store juga dilengkapi fitur keranjang belanja dan proses checkout yang mendukung dua metode pembayaran,  yaitu Virtual Account dan Saldo Dompet (My Wallet). 
+ Pengguna dapat melakukan top-up saldo ke dompet digital mereka, dan sistem akan melakukan validasi otomatis saat checkout untuk memastikan saldo mencukupi sebelum transaksi diproses. Dengan kombinasi fitur tersebut, KidZ Store menjadi solusi e-commerce sederhana 
+namun fungsional untuk memenuhi kebutuhan perlengkapan anak-anak secara praktis dan modern.
+ 1. Pembeli (User)
+Melihat daftar produk
+Melihat detail produk
+Menambahkan produk ke keranjang
+Melakukan checkout
+Membayar menggunakan Virtual Account (VA) yang dibuat otomatis
+Melakukan top up saldo
+Melihat riwayat transaksi, riwayat top up, dan histori pembelian
+2. Seller (Penjual)
+Menambahkan produk baru (nama, harga, deskripsi, dan gambar)
+Mengedit dan menghapus produk
+Melihat daftar produk miliknya
+Melihat transaksi pembelian terhadap produk yang dijual
+Dashboard yang menampilkan ringkasan transaksi
+3. Admin
+Mengelola seluruh data user
+Mengelola seluruh produk
+Melihat seluruh transaksi
+Monitoring alur top up dan pembayaran
+Mengakses dashboard admin yang berisi data statistik aplikasi
+Aplikasi ini juga memiliki integrasi sistem keuangan sederhana:
+Setiap pengguna memiliki wallet (saldo).
+Top up akan menambah saldo.
+Pembelian produk akan mengurangi saldo pembeli dan menambah saldo seller.
+Admin dapat melihat seluruh aktivitas keuangan.
+
+Dengan implementasi fitur ini, aplikasi membentuk simulasi marketplace yang lengkap mulai dari proses browsing sampai transaksi selesai.
+Fitur Utama
+1. Halaman Homepage
+    Berisi produk populer, banner, dan fitur pencarian produk.
+2. Halaman Produk
+Melihat daftar produk
+Melihat detail produk
+Fitur search
+Fitur kategori
+3. Halaman Seller
+Tambah produk
+Edit & hapus produk
+Lihat daftar transaksi
+Dashboard seller
+4. Payment (Virtual Account)
+Fitur top up saldo
+Pembayaran otomatis
+History payment
+5. Admin Dashboard
+Melihat data user
+Kelola transaksi
+Manajemen produk
+
+Teknologi yang Digunakan : 
+Laravel 12
+MySQL / MariaDB
+Bootstrap / Tailwind (opsional, sesuai project)
+Blade Template
+Composer
+Git & GitHub Collaboration
+
+Cara Instalasi & Menjalankan Project
+
+1. Clone repository:
+```bash
+git clone https://github.com/Ben-scrp/KEL-12-E-Commerce-PEMWEB-UAP-2025.git
+```
+2. Masuk ke direktori project:
+```bash
+cd KEL-12-E-Commerce-PEMWEB-UAP-2025
+
+3. Install dependencies:
+```bash
+composer install
+```
+4. Copy file `.env`:
+```bash
+cp .env.example .env
+```
+5. Generate key Laravel:
+```bash
+php artisan key:generate
+```
+6. Buat database baru, lalu sesuaikan pengaturan DB di `.env`.
+7. Jalankan migrate dan seeder:
+```bash
+php artisan migrate --seed
+```
+8. Jalankan server:
+```bash
+php artisan serve
+```
+
+Alur Kerja Aplikasi : 
+1. User membuka homepage dan melihat daftar produk.
+2. Jika tertarik membeli, user membuka detail produk.
+3. User melakukan top up saldo terlebih dahulu jika saldo kurang.
+4. User menekan tombol Buy / Checkout.
+5. Sistem membuat Virtual Account otomatis.
+6. Setelah pembayaran sukses, saldo user berkurang dan saldo seller bertambah.
+7. Seller melihat transaksi pada dashboard seller.
+8. Admin memonitor seluruh transaksi melalui dashboard admin.
+
+Struktur Folder (Laravel MVC)
+```
+app/
+ ├── Http/
+ │    ├── Controllers/   → Semua controller (User, Admin, Seller)
+ │    └── Middleware/
+ ├── Models/             → Model seperti User, Product, Transaction
+resources/
+ ├── views/               → Blade template (home, product, admin, seller)
+routes/
+ ├── web.php              → Routing aplikasi
+public/
+ ├── uploads/             → Gambar produk
+```
+
+Database & ERD (Penjelasan)
+Database menggunakan tabel utama berikut:
+users → menyimpan data pembeli, seller, admin
+products → data produk
+transactions → transaksi pembelian
+topups → catatan top up saldo user
+wallets → saldo tiap user
+
+Relasi utama:
+user memiliki banyak produk (One-to-Many)
+user memiliki satu wallet (One-to-One)
+user memiliki banyak transaksi (One-to-Many)
+produk memiliki banyak transaksi (One-to-Many).
 
