@@ -53,14 +53,19 @@ Route::middleware(['auth'])->group(function () {
     | WALLET
     |--------------------------------------------------------------------------
     */
+<<<<<<< HEAD
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
 
+=======
+    
+>>>>>>> 49dcd119cb94899d611f6a48e884d1955b0a8e22
     Route::get('/wallet/topup/va', [WalletController::class, 'showTopupVA'])->name('wallet.topup.va');
 
     Route::get('/wallet/topup', [WalletController::class, 'showTopupForm'])->name('wallet.topup.form');
     Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
 
     Route::post('/wallet/pay', [WalletController::class, 'payWithWallet'])->name('wallet.pay');
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
 
     /*
     |--------------------------------------------------------------------------

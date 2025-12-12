@@ -51,7 +51,7 @@ class CheckoutController extends Controller
             'shipping_type'  => $request->shipping_type,
             'shipping_cost'  => 10000,
             'grand_total'    => $request->total_price,
-            'tax'            => 40000,
+            'tax'            => 1000,
             'payment_status' => 'unpaid',
             'code'           => Str::upper(Str::random(10)),
         ]);
@@ -81,8 +81,12 @@ class CheckoutController extends Controller
             return redirect()->route('payment.index', ['va' => $va]);
         }
 
-        return redirect()->route('wallet.index')
-            ->with('success', 'Pembayaran menggunakan saldo');
+        return redirect()->route('wallet.index', [
+            'transaction_id' => $transaction->id,
+            'total' => $transaction->grand_total
+        ]);
+
+
     }
 
 
