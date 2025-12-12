@@ -16,8 +16,9 @@
                         <div class="mb-4">
                             <label for="va_number" class="block text-gray-700">Nomor VA</label>
                             <input type="text" name="va_number" id="va_number" 
-                                value="{{ old('va_number', session('va_number')) }}"
+                                value="{{ request('va') }}"
                                 class="w-full border-gray-300 rounded-md shadow-sm" required>
+
                         </div>
 
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
