@@ -51,7 +51,7 @@ class CheckoutController extends Controller
             'shipping_type'  => $request->shipping_type,
             'shipping_cost'  => 10000,
             'grand_total'    => $request->total_price,
-            'tax'            => 40000,
+            'tax'            => 1000,
             'payment_status' => 'unpaid',
             'code'           => Str::upper(Str::random(10)),
         ]);
