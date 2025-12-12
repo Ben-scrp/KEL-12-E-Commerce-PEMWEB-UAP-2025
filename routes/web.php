@@ -71,10 +71,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/va', [CheckoutController::class, 'payWithVA']);
     
     Route::get('/payment', [VaPaymentController::class, 'index'])->name('payment.index');
-    Route::get('/payment/check', function () {
-        return redirect('/payment');
-    });
-    Route::post('/payment/check', [VaPaymentController::class, 'check'])->name('payment.check');
+    Route::match(['get','post'], '/payment/check', [VaPaymentController::class, 'check'])
+    ->name('payment.check');
+
+
     Route::post('/payment/pay', [VaPaymentController::class, 'pay'])->name('payment.pay');
 });
 

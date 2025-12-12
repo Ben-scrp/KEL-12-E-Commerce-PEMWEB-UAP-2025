@@ -23,16 +23,26 @@
 
                 <h3 class="text-lg font-bold mb-2">Simulasi Nominal Transfer</h3>
 
+
+                {{-- ALERT ERROR --}}
+                @if (session('error'))
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('payment.pay') }}" method="POST">
                     @csrf
 
                     <input type="hidden" name="va_number" value="{{ $va->va_number }}">
 
                     <input type="number" 
-                           name="amount" 
-                           placeholder="Masukkan nominal"
-                           class="border p-2 w-full rounded mb-3"
-                           required>
+                    name="amount" 
+                    placeholder="Masukkan nominal"
+                    class="border p-2 w-full rounded mb-3"
+                    value="{{ old('amount') }}"
+                    required>
+
 
                     <button class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
                         Konfirmasi Pembayaran

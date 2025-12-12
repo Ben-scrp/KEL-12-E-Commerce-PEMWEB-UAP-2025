@@ -16,7 +16,7 @@
                         <div class="mb-4">
                             <label for="va_number" class="block text-gray-700">Nomor VA</label>
                             <input type="text" name="va_number" id="va_number" 
-                                value="{{ $va ?? '' }}"
+                                value="{{ old('va_number', session('va_number')) }}"
                                 class="w-full border-gray-300 rounded-md shadow-sm" required>
                         </div>
 

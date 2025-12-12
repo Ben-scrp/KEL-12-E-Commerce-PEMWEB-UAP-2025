@@ -18,22 +18,43 @@ class VaPaymentController extends Controller
 
     // 2. Cek VA & Tampilkan Detail
     public function check(Request $request)
-    {
+{
+    // Ambil VA number dari POST form atau dari session atau dari query string
+    $vaInput = $request->va_number 
+                ?? session('va_number') 
+                ?? $request->query('va');
+
+    // Jika tidak ada VA sama sekali → kembali ke form awal
+    if (!$vaInput) {
+        return redirect()->route('payment.index');
+    }
+
+    // Validasi hanya untuk POST (input dari form)
+    if ($request->isMethod('post')) {
         $request->validate([
             'va_number' => 'required|numeric'
         ]);
-
-        $va = VirtualAccount::where('va_number', $request->va_number)->where('is_paid', false)->first();
-
-        if (!$va) {
-            return back()->with('error', 'Nomor VA tidak ditemukan atau sudah dibayar.');
-        }
-
-        return view('payment.confirm', [
-            'va' => $va,
-            'transaction' => $va->transaction
-        ]);
     }
+
+    // Cari VA
+    $va = VirtualAccount::where('va_number', $vaInput)
+            ->where('is_paid', false)
+            ->first();
+
+    if (!$va) {
+        return back()->with('error', 'Nomor VA tidak ditemukan atau sudah dibayar.');
+    }
+
+    // Simpan VA agar tetap otomatis muncul jika nominal salah
+    session(['va_number' => $vaInput]);
+
+    return view('payment.confirm', [
+        'va' => $va,
+        'transaction' => $va->transaction
+    ]);
+}
+
+
 
     // 3. Konfirmasi Pembayaran
     public function pay(Request $request)
@@ -47,9 +68,14 @@ class VaPaymentController extends Controller
         $transaction = $va->transaction;
 
         // Validasi Nominal
-        if ($request->amount < $transaction->grand_total) {
-            return back()->with('error', 'Nomor transfer kurang dari tagihan!');
+       if ($request->amount != $transaction->grand_total) {
+            return redirect()
+                ->route('payment.check')
+                ->withInput()
+                ->with('error', 'Nominal yang Anda masukkan tidak sesuai total tagihan.')
+                ->with('va_number', $request->va_number);
         }
+
 
         // A. Update Status VA
         $va->update(['is_paid' => true]);
