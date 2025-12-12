@@ -2,6 +2,11 @@
 
 ## **Konteks Proyek**
 
+##readme link kelompok 12
+BENING RAHMA AISYAH - 245150600111001
+IKRIMA MAISYA ANWAR - 245150600111014
+https://github.com/Ben-scrp/KEL-12-E-Commerce-PEMWEB-UAP-2025/blob/19c571a9220ceda6cecd7e876e7eb2b37aaed13f/readme
+
 Kalian diberikan sebuah repositori proyek Laravel 12 yang sudah dilengkapi dengan:
 
 1. Starter Kit **Laravel Breeze** untuk basic autentikasi.  
