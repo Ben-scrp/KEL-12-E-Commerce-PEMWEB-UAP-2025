@@ -2,7 +2,7 @@
 
 <style>
     body {
-        background: #f5f7fa;
+        background: #e9f5ec !important; /* HIJAU SOFT */
     }
     .product-card {
         background: white;
@@ -133,4 +133,3 @@
 </div>
 
 </x-app-layout>
-
