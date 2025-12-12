@@ -37,11 +37,12 @@ class CheckoutController extends Controller
             'product_id' => 'required',
             'price' => 'required|numeric'
         ]);
+        $product = Product::findOrFail($request->product_id);
 
         // 1. Buat transaksi
-    $transaction = Transaction::create([
+        $transaction = Transaction::create([
             'buyer_id'       => auth()->id(),
-            'store_id'       => null,
+            'store_id'       =>  $product->store_id,
             'address_id'     => 0, // FIX WAJIB ADA
             'address'        => $request->address,
             'city'           => $request->city,
