@@ -50,9 +50,31 @@
 <div class="container mx-auto px-8 py-10">
 
     <h1 class="text-3xl font-bold mb-6">Semua Produk</h1>
+    
+    <!-- ========== SEARCH BAR ========== -->
+    <div class="mb-6">
+        <form action="{{ route('products.index') }}" method="GET">
+            <div class="flex items-center bg-white shadow rounded-full px-4 py-3 border border-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 105.4 5.4a7.5 7.5 0 0011.31 11.31z" />
+                </svg>
+
+                <input type="text" 
+                    name="search"
+                    placeholder="Cari produk terbaik..."
+                    class="w-full ml-3 focus:outline-none text-gray-600"
+                    value="{{ request('search') }}">
+            </div>
+        </form>
+    </div>
+    <!-- ========== END SEARCH ========== -->
+
 
     <div class="grid grid-cols-4 gap-6">
 
+        {{-- LOOP DATA PRODUK --}}
         @foreach($products as $product)
 
         <div class="product-card">
@@ -91,7 +113,6 @@
             class="mt-3 inline-block w-full text-center py-2 rounded bg-green-600 text-white hover:bg-green-700">
                 Lihat Produk
             </a>
-
 
         </div>
 

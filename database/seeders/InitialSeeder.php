@@ -73,7 +73,7 @@ class InitialSeeder extends Seeder
                 'image' => null,
             ]);
         }
-
+        
         Store::create([
             'user_id' => 2,
             'name' => 'Toko Satu',
