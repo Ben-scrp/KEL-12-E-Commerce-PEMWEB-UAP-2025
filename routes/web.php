@@ -108,9 +108,15 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
+    
+    // Verifikasi Toko
+    Route::get('/admin/verification', [\App\Http\Controllers\AdminController::class, 'verification'])->name('admin.verification');
+    Route::post('/admin/verification/{store}/verify', [\App\Http\Controllers\AdminController::class, 'verifyStore'])->name('admin.verification.verify');
+    Route::post('/admin/verification/{store}/reject', [\App\Http\Controllers\AdminController::class, 'rejectStore'])->name('admin.verification.reject');
+
+    // Manajemen User & Toko
+    Route::get('/admin/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('admin.users');
 });
 
 /*
